@@ -32,3 +32,10 @@ The trade-off: this requires errors to carry the marker in their message string.
 - The marker format is `[reject:<32-hex-chars>] <message>`. Leading whitespace before the marker is tolerated; any deviation (wrong length, non-hex characters, missing brackets) means the error will not be recognized.
 - `correlate` returns `null` (not an empty array) when the error has no marker or the id is unknown. Check the return value before iterating.
 - With `maxGroups` set, the oldest group is evicted in insertion order when capacity is exceeded. Set `maxGroups: 0` for unlimited storage.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
